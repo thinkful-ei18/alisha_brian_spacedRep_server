@@ -93,19 +93,19 @@ router.post('/', (req, res, next) => {
 
   const newUser = { fullname, email, username, password };
   User.find({ username })
-  .count()
-  .then(count => {
-    console.log(count);
-    if (count) {
-      return Promise.reject({
-        code: 422,
-        reason: 'ValidationError',
-        message: 'Username already taken',
-        location: 'username'
-      });
-    }
-    return User.hashPassword(password)
-  })
+    .count()
+    .then(count => {
+      console.log(count);
+      if (count) {
+        return Promise.reject({
+          code: 422,
+          reason: 'ValidationError',
+          message: 'Username already taken',
+          location: 'username'
+        });
+      }
+      return User.hashPassword(password);
+    })
     .then(digest => {
 
       const newUser = {
@@ -124,7 +124,7 @@ router.post('/', (req, res, next) => {
         .json(result);
     })
     .catch(err => {
-console.log(err.code)
+      console.log(err.code);
       if (err.code === 11000) {
         err = new Error('That username is taken');
         err.status = 400;
