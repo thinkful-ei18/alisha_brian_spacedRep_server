@@ -24,7 +24,7 @@ app.use(
 
 app.use(express.json());
 
-app.use('/', router);
+app.use('/api', router);
 
 app.use(function (req, res, next) {
   const err = new Error('Not Found');
