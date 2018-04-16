@@ -4,10 +4,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const express = require('express');
 
-const User = require('../models/user');
+const User = require('../models/User');
 const { Strategy: LocalStrategy } = require('passport-local');
-
-// const localOptions = { usernameField: 'email' };
 
 //Setting up local login strategy
 const localStrategy = new LocalStrategy((username, password, done) => {
@@ -43,6 +41,5 @@ const localStrategy = new LocalStrategy((username, password, done) => {
       return done(err);
     });
 });
-passport.use(localStrategy);
 
 module.exports = localStrategy;
