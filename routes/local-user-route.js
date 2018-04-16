@@ -6,8 +6,19 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
+/* =========== GET =========== */
+router.get('/user', (req, res, next) => {
+
+  User.find()
+    .then( user => {
+      res.json(user);
+    })
+    .catch(err => next);
+});
+
+
 //POST
-router.post('/', (req, res, next) => {
+router.post('/auth', (req, res, next) => {
   const requiredFields = ['email', 'username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -92,6 +103,7 @@ router.post('/', (req, res, next) => {
   email = email.trim();
 
   const newUser = { fullname, email, username, password };
+
   User.find({ username })
     .count()
     .then(count => {
