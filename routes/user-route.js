@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 
 /* =========== GET =========== */
-router.get('/user', (req, res, next) => {
+router.get('/', (req, res, next) => {
 
   User.find()
     .then( user => {
@@ -18,7 +18,7 @@ router.get('/user', (req, res, next) => {
 
 
 //POST
-router.post('/auth', (req, res, next) => {
+router.post('/register', (req, res, next) => {
   const requiredFields = ['email', 'username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 

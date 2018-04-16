@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv').config();
-const router = require('./routes/local-user-route');
+const userRouter = require('./routes/user-route');
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 
@@ -24,7 +24,7 @@ app.use(
 
 app.use(express.json());
 
-app.use('/api', router);
+app.use('/api/user', userRouter);
 
 app.use(function (req, res, next) {
   const err = new Error('Not Found');
