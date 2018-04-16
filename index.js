@@ -4,9 +4,17 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv').config();
-const userRouter = require('./routes/user-route');
+const passport = require('passport');
+
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
+const jwtStrategy = require('./auth/jwt');
+const localStrategy = require('./auth/local-strategy');
+
+const userRouter = require('./routes/local-user-route');
+const loginRouter = require('./routes/jwt-route');
+const registerRouter = require('./routes/register-route');
+
 
 const app = express();
 
@@ -24,7 +32,16 @@ app.use(
 
 app.use(express.json());
 
+
+passport.use(jwtStrategy);
+passport.use(localStrategy);
+
+
 app.use('/api/user', userRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/register', registerRouter);
+
+
 
 app.use(function (req, res, next) {
   const err = new Error('Not Found');
