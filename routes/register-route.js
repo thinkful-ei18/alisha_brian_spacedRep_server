@@ -89,9 +89,10 @@ router.post('/', (req, res, next) => {
   let { fullname ='', email, username, password = '' } = req.body;
   email = email.trim();
   let questions = Questions;
+  let head = Questions[0].value.question;
   
 
-  const newUser = { fullname, email, username, password, questions };
+  const newUser = { fullname, email, username, password, questions, head };
 
   User.find({ username })
     .count()
@@ -113,7 +114,8 @@ router.post('/', (req, res, next) => {
         email,
         username,
         password: digest,
-        questions
+        questions,
+        head
       };
       return User.create(newUser);
     })
