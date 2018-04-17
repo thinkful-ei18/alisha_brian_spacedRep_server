@@ -4,10 +4,12 @@ const router = express.Router();
 
 const mongoose = require('mongoose');
 const User = require('../models/User');
+const Questions = require('../models/questions');
 
 
 //POST
 router.post('/', (req, res, next) => {
+
   const requiredFields = ['email', 'username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -35,7 +37,6 @@ router.post('/', (req, res, next) => {
   const withWhiteSpaces = noWhiteSpaces.find(
     field => req.body[field].trim() !== req.body[field]
   );
-  console.log('TRIM');
   if (withWhiteSpaces) {
     const err = new Error(
       `Field: '${withWhiteSpaces}' cannot start or end with whitespace`
@@ -56,17 +57,14 @@ router.post('/', (req, res, next) => {
 			req.body[field].trim().length < sizedFields[field].min
   );
   if (tooSmall) {
-    console.log('E');
 
     const min = sizedFields[tooSmall].min;
     const err = new Error(
       `Field: '${tooSmall}' must be at least ${min} characters long`
     );
 
-    console.log('X');
 
     err.status = 422;
-    console.log('Y');
 
     return next(err);
   }
@@ -90,13 +88,14 @@ router.post('/', (req, res, next) => {
   //MAKE THAT USER, UNLESS
   let { fullname ='', email, username, password = '' } = req.body;
   email = email.trim();
+  let questions = Questions;
+  
 
-  const newUser = { fullname, email, username, password };
+  const newUser = { fullname, email, username, password, questions };
 
   User.find({ username })
     .count()
     .then(count => {
-      console.log(count);
       if (count) {
         return Promise.reject({
           code: 422,
@@ -113,7 +112,8 @@ router.post('/', (req, res, next) => {
         fullname,
         email,
         username,
-        password: digest
+        password: digest,
+        questions
       };
       return User.create(newUser);
     })
@@ -125,7 +125,6 @@ router.post('/', (req, res, next) => {
         .json(result);
     })
     .catch(err => {
-      console.log(err.code);
       if (err.code === 11000) {
         err = new Error('That username is taken');
         err.status = 400;
