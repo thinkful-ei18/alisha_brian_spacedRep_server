@@ -22,9 +22,6 @@ const userSchema = new Schema({
   },
   questions: {
     type: Array
-  },
-  head: {
-    type: String
   }
 });
 
