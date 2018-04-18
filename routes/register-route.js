@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const User = require('../models/User');
 const Questions = require('../models/questions');
 
@@ -88,8 +88,21 @@ router.post('/', (req, res, next) => {
   //MAKE THAT USER, UNLESS
   let { fullname ='', email, username, password = '' } = req.body;
   email = email.trim();
+
+
   let questions = Questions;
-  let head = Questions[0].value.question;
+  questions.map((question, index) => {
+    question.M = 1;
+    if(index !== questions.length-1) {
+      question.next = questions[index + 1];
+    }
+    else {
+      question.next = null;
+    }
+  });
+  questions = questions[0];
+
+  let head = Questions[0].question;
   
 
   const newUser = { fullname, email, username, password, questions, head };
