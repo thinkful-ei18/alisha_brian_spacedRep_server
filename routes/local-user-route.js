@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const options = { session: false, failWithError: true };
