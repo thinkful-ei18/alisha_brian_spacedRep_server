@@ -2,6 +2,9 @@
 
 let questions = [
   {
+    head : ''
+  },
+  {
     question: 'le pain',
     answer: 'bread'
   },

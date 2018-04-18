@@ -84,27 +84,30 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  //MAKE THAT USER, UNLESS
-  let { fullname ='', email, username, password = '' } = req.body;
-  email = email.trim();
 
-
+  /* ========== PREPARE QUESTIONS FOR USER SCHEMA ========== */
   let questions = Questions;
+
   questions.map((question, index) => {
-    question.M = 1;
-    if(index !== questions.length-1) {
-      question.next = questions[index + 1];
+    if (index === 0) {
+      question.head = questions[index + 1];
     }
     else {
-      question.next = null;
+      question.M = 1;
+      if(index !== questions.length-1) {
+        question.next = questions[index + 1];
+      }
+      else {
+        question.next = null;
+      }
     }
   });
-  questions = questions[0];
 
-  let head = Questions[0].question;
   
-
-  const newUser = { fullname, email, username, password, questions, head };
+  /* ========== CREATE USER ========== */
+  let { fullname ='', email, username, password = '' } = req.body;
+  email = email.trim();
+  questions = questions[0];
 
   User.find({ username })
     .count()
@@ -126,8 +129,7 @@ router.post('/', (req, res, next) => {
         email,
         username,
         password: digest,
-        questions,
-        head
+        questions
       };
       return User.create(newUser);
     })
