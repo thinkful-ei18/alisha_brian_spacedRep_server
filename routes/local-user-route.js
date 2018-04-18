@@ -22,18 +22,75 @@ router.get('/', jwtAuth, (req, res, next) => {
 });
 
 
-/* =========== GET QUESTION HEAD FOR USER =========== */
+/* =========== GET QUESTION FOR USER =========== */
 router.get('/question', jwtAuth, (req, res, next) => {
 
   const userId = req.user.id;
 
   User.findById(userId)
     .then( user => {
-      console.log('USER:', user);
-      res.json(user.questions[0].value);
+      let qAndA = {
+        question: user.questions[0].head.question,
+        answer: user.questions[0].head.answer
+      };
+      res.json(qAndA);
     })
     .catch(err => next);
 });
+
+
+/* =========== VALIDATE USER ANSWER =========== */
+router.put('/validate', jwtAuth, (req, res, next) => {
+  const userId = req.user.id;
+  const input = req.body.input;
+
+  User.findById(userId)
+    .then(user => {
+      if (user.questions[0].head.answer === input) {
+        user.questions[0].head.M = user.questions[0].head.M * 2;
+      } else {
+        user.questions[0].head.M = 1;
+      }
+
+      return insertAt(user.questions[0]);
+    })
+    .then( questions => {
+      User.findByIdAndUpdate(userId, {questions: [questions]}, {upsert: false, new: true } )
+        .then( user => {
+
+          let qAndA = {
+            question: questions.head.question,
+            answer: questions.head.answer
+          };
+          res.json(qAndA);
+        });
+    })
+    .catch(err => next);
+
+});
+
+
+const insertAt = questions => {
+
+  let reinsert = questions;
+  let currentNode = questions.head;
+  let previousNode;
+
+  for (let i=0; i<questions.head.M+1; i++) {
+    previousNode = currentNode; 
+    currentNode = currentNode.next; 
+  }
+
+  previousNode.next = {
+    question: reinsert.head.question,
+    answer: reinsert.head.answer,
+    M: reinsert.head.M,
+    next: currentNode 
+  };
+  reinsert.head = reinsert.head.next;
+
+  return reinsert;
+};
 
 
 module.exports = router;
