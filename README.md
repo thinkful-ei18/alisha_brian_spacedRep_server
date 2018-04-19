@@ -34,8 +34,10 @@ The production-ready version of Foodie Phonetics can be found at:
 # The Code
 
 #### Mongoose User Schema
-![Alt text](https://github.com/thinkful-ei18/alisha_brian_spacedRep_server/blob/master/Screen%20Shot%202018-04-19%20at%202.31.39%20PM.png?raw=true "Mongoose User Schema"
+![Alt text](https://github.com/thinkful-ei18/alisha_brian_spacedRep_server/blob/master/FoodiePhonetics_MongooseUserSchema_041918.png?raw=true "Mongoose User Schema")
 
-#### User Router
+#### User Routes
+![Alt text](https://github.com/thinkful-ei18/alisha_brian_spacedRep_server/blob/master/FoodiePhonetics_UserRoutes_041918.png?raw=true "User Routes")
+
 
 
