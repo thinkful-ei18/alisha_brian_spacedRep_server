@@ -2,7 +2,7 @@
 An app to learn how to say your favorite foods in your new favorite language!
 
 ## The Problem
-How do you ask for chicken in France? Eggs in Spain? Cake in Germany? With Foodie Phonetics, the user will be able translate a variety of foods into a new language. The MVP is a fully working English to French version of the app.
+How do you ask for chicken in France? Eggs in Spain? Cake in Germany? With Foodie Phonetics, the user will be able translate a variety of foods into a new language so they can be a foodie anywhere! The MVP is a fully working English to French version of the app.
 
 ## The Solution
 Using a spaced repetition algorithm, Foodie Phonetics teaches the user how to say the most common food items in their language of choice. Each time the user gets a question correct, that question is moved farther back in a simulated singly linked list. If the user gets a question incorrect, it will be moved to the top of the list. This way, the user can practice what they don't know more frequently that what they do know.
