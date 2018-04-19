@@ -22,7 +22,7 @@ For production, Heroku and Netlify were used.
 ![Alt text](https://github.com/thinkful-ei18/Alisha_Brian_SpacedRep_Client/blob/master/FoodiePhonetics_TechnologiesUsed_041918.png?raw=true "Visual representation of technologies used to create Foodie Phonetics")
 
 # The App
-The production-ready version of Foodie Phonetics can be found at: https://jolly-lewin-f8103d.netlify.com
+The production-ready version of Foodie Phonetics can be found at: foodiephonetics.netlify.com
 
 ### Login Page
 
