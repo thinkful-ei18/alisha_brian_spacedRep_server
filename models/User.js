@@ -22,6 +22,10 @@ const userSchema = new Schema({
   },
   questions: {
     type: Array
+  },
+  score: {
+    type: Number,
+    default: 0
   }
 });
 

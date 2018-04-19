@@ -31,7 +31,8 @@ router.get('/question', jwtAuth, (req, res, next) => {
     .then( user => {
       let qAndA = {
         question: user.questions[0].head.question,
-        answer: user.questions[0].head.answer
+        answer: user.questions[0].head.answer,
+        score: user.score
       };
       res.json(qAndA);
     })
@@ -48,6 +49,7 @@ router.put('/validate', jwtAuth, (req, res, next) => {
     .then(user => {
       if (user.questions[0].head.answer === input) {
         user.questions[0].head.M = user.questions[0].head.M * 2;
+        user.score += 1;
       } else {
         user.questions[0].head.M = 1;
       }
@@ -60,7 +62,8 @@ router.put('/validate', jwtAuth, (req, res, next) => {
 
           let qAndA = {
             question: questions.head.question,
-            answer: questions.head.answer
+            answer: questions.head.answer,
+            score: user.score
           };
           res.json(qAndA);
         });
