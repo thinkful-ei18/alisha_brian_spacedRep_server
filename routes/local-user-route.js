@@ -44,12 +44,13 @@ router.get('/question', jwtAuth, (req, res, next) => {
 router.put('/validate', jwtAuth, (req, res, next) => {
   const userId = req.user.id;
   const input = req.body.input;
+  let score;
 
   User.findById(userId)
     .then(user => {
       if (user.questions[0].head.answer === input) {
         user.questions[0].head.M = user.questions[0].head.M * 2;
-        user.score += 1;
+        score = user.score + 1;
       } else {
         user.questions[0].head.M = 1;
       }
@@ -57,7 +58,8 @@ router.put('/validate', jwtAuth, (req, res, next) => {
       return insertAt(user.questions[0]);
     })
     .then( questions => {
-      User.findByIdAndUpdate(userId, {questions: [questions]}, {upsert: false, new: true } )
+      
+      User.findByIdAndUpdate(userId, {questions: [questions], score}, {upsert: false, new: true } )
         .then( user => {
 
           let qAndA = {
