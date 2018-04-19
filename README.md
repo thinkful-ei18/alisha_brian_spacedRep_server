@@ -18,11 +18,11 @@ Testing was done with Mocha, Chai, and Jest
 
 For production, Heroku and Netlify were used.
 
-### Visual Representation of Full Stack Technologies Used
-![Alt text](https://github.com/thinkful-ei18/Alisha_Brian_SpacedRep_Client/blob/master/Screen%20Shot%202018-04-19%20at%202.18.54%20PM.png?raw=true "Visual representation of technologies used to create Foodie Phonetics")
+### Visual Representation of Technologies Used
+![Alt text](https://github.com/thinkful-ei18/Alisha_Brian_SpacedRep_Client/blob/master/FoodiePhonetics_TechnologiesUsed_041918.png?raw=true "Visual representation of technologies used to create Foodie Phonetics")
 
 # The App
-The production-ready version of Foodie Phonetics can be found at: 
+The production-ready version of Foodie Phonetics can be found at: https://jolly-lewin-f8103d.netlify.com
 
 ### Login Page
 
