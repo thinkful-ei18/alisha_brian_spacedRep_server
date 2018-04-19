@@ -21,7 +21,7 @@ For production, Heroku and Netlify were used.
 ### Visual Representation of Full Stack Technologies Used
 ![Alt text](https://github.com/thinkful-ei18/Alisha_Brian_SpacedRep_Client/blob/master/Screen%20Shot%202018-04-19%20at%202.18.54%20PM.png?raw=true "Visual representation of technologies used to create Foodie Phonetics")
 
-### The App
+# The App
 The production-ready version of Foodie Phonetics can be found at: 
 
 ### Login Page
