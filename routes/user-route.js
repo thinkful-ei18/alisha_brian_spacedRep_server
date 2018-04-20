@@ -8,9 +8,10 @@ const User = require('../models/User');
 
 const options = { session: false, failWithError: true };
 const jwtAuth = passport.authenticate('jwt', options);
+router.use(jwtAuth); // every route on this page will run through jwtAuth
 
 /* =========== GET USER =========== */
-router.get('/', jwtAuth, (req, res, next) => {
+router.get('/', (req, res, next) => {
 
   const userId = req.user.id;
 
@@ -23,7 +24,7 @@ router.get('/', jwtAuth, (req, res, next) => {
 
 
 /* =========== GET QUESTION FOR USER =========== */
-router.get('/question', jwtAuth, (req, res, next) => {
+router.get('/question', (req, res, next) => {
 
   const userId = req.user.id;
 
@@ -41,7 +42,7 @@ router.get('/question', jwtAuth, (req, res, next) => {
 
 
 /* =========== VALIDATE USER ANSWER =========== */
-router.put('/validate', jwtAuth, (req, res, next) => {
+router.put('/validate', (req, res, next) => {
   const userId = req.user.id;
   const input = req.body.input;
   let score;
@@ -98,6 +99,19 @@ const insertAt = questions => {
 
   return reinsert;
 };
+
+
+/* =========== RESET USER SCORE TO 0 =========== */
+router.post('/reset', (req, res, next) => {
+
+  const userId = req.user.id;
+  console.log('entered');
+  User.findByIdAndUpdate(userId, {score: 0}, {upsert: false, new: true } )
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => next);
+});
 
 
 module.exports = router;
