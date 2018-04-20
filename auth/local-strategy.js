@@ -1,9 +1,5 @@
 'use strict';
 
-const passport = require('passport');
-const mongoose = require('mongoose');
-const express = require('express');
-
 const User = require('../models/User');
 const { Strategy: LocalStrategy } = require('passport-local');
 
@@ -15,9 +11,10 @@ const localStrategy = new LocalStrategy((username, password, done) => {
       user = results;
       if (!user) {
         return Promise.reject({
-          reason: 'Login Eror',
+          reason: 'Login Error',
           message: 'Wrong username',
-          location: 'username'
+          location: 'username',
+          status: 422
         });
       }
 
@@ -28,13 +25,14 @@ const localStrategy = new LocalStrategy((username, password, done) => {
         return Promise.reject({
           reason: 'Login Error',
           message: 'Wrong password',
-          location: 'password'
+          location: 'password',
+          status: 422
         });
       }
       return done(null, user);
     })
     .catch(err => {
-      if (err.reason === 'Login Error') {
+      if (err.reason !== 'Login Error') {
         return done(null, false);
       }
 
