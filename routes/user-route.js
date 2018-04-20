@@ -105,7 +105,7 @@ const insertAt = questions => {
 router.post('/reset', (req, res, next) => {
 
   const userId = req.user.id;
-  console.log('entered');
+  
   User.findByIdAndUpdate(userId, {score: 0}, {upsert: false, new: true } )
     .then(user => {
       res.json(user);
