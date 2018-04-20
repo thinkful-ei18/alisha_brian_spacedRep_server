@@ -53,6 +53,7 @@ router.put('/validate', jwtAuth, (req, res, next) => {
         score = user.score + 1;
       } else {
         user.questions[0].head.M = 1;
+        score = user.score;
       }
 
       return insertAt(user.questions[0]);
@@ -65,8 +66,9 @@ router.put('/validate', jwtAuth, (req, res, next) => {
           let qAndA = {
             question: questions.head.question,
             answer: questions.head.answer,
-            score: user.score
+            score
           };
+
           res.json(qAndA);
         });
     })
