@@ -11,8 +11,8 @@ const { dbConnect } = require('./db-mongoose');
 const jwtStrategy = require('./auth/jwt');
 const localStrategy = require('./auth/local-strategy');
 
-const userRouter = require('./routes/local-user-route');
-const loginRouter = require('./routes/jwt-route');
+const userRouter = require('./routes/user-route');
+const loginRouter = require('./routes/login-route');
 const registerRouter = require('./routes/register-route');
 
 
@@ -26,19 +26,21 @@ app.use(
 
 app.use(cors());
 
+/* ========== BODYPARSING MIDDLEWARE ========== */
 app.use(express.json());
 
-
+/* ========== PASSPORT MIDDLEWARE ========== */
 passport.use(jwtStrategy);
 passport.use(localStrategy);
 
 
+/* ========== ENPOINTS ========== */
 app.use('/api/user', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
 
 
-
+/* ========== ERROR HANDLING ========== */
 app.use(function (req, res, next) {
   const err = new Error('Not Found');
   err.status = 404;
@@ -52,6 +54,8 @@ app.use(function (err, req, res, next) {
     error: app.get('env') === 'development' ? err : {}
   });
 });
+
+
 
 function runServer(port = PORT) {
   const server = app
