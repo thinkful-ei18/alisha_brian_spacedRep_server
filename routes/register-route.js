@@ -32,7 +32,7 @@ router.post('/', (req, res, next) => {
   }
 
   //TRIM SPACE BUT NOT ON PASSWORD
-  const noWhiteSpaces = ['username'];
+  const noWhiteSpaces = ['username', 'password', 'email'];
   const withWhiteSpaces = noWhiteSpaces.find(
     field => req.body[field].trim() !== req.body[field]
   );
@@ -108,6 +108,7 @@ router.post('/', (req, res, next) => {
   let { fullname ='', email, username, password = '' } = req.body;
   email = email.trim();
   questions = questions[0];
+  const score = 0;
 
   User.find({ username })
     .count()
@@ -129,7 +130,8 @@ router.post('/', (req, res, next) => {
         email,
         username,
         password: digest,
-        questions
+        questions,
+        score
       };
       return User.create(newUser);
     })
