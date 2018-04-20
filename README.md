@@ -1,45 +1,43 @@
-# Thinkful Backend Template
+ # Foodie Phonetics
+An app to learn how to say your favorite foods in your new favorite language!
 
-A template for developing and deploying Node.js apps.
+## The Problem
+How do you ask for chicken in France? Eggs in Spain? Cake in Germany? With Foodie Phonetics, the user will be able translate a variety of foods into a new language so they can be a foodie anywhere! The MVP is a fully working English to French version of the app.
 
-## Getting started
+## The Solution
+Using a spaced repetition algorithm, Foodie Phonetics teaches the user how to say the most common food items in their language of choice. Each time the user gets a question correct, that question is moved farther back in a simulated singly linked list. If the user gets a question incorrect, it will be moved to the top of the list. This way, the user can practice what they don't know more frequently that what they do know.
 
-### Setting up a project
+#### Technologies Used ####
 
-* Move into your projects directory: `cd ~/YOUR_PROJECTS_DIRECTORY`
-* Clone this repository: `git clone https://github.com/Thinkful-Ed/backend-template YOUR_PROJECT_NAME`
-* Move into the project directory: `cd YOUR_PROJECT_NAME`
-* Install the dependencies: `npm install`
-* Create a new repo on GitHub: https://github.com/new
-    * Make sure the "Initialize this repository with a README" option is left unchecked
-* Update the remote to point to your GitHub repository: `git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME`
+The front-end was developed with React, Redux, Redux Form
+Styling was done with CSS
 
-### Working on the project
+The back-end was developed with NodeJS, MongoDB, Mongoose, and Express.
 
-* Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
-* Run the development task: `npm start`
-    * Starts a server running at http://localhost:8080
-    * Automatically restarts when any of your files change
+Testing was done with Mocha, Chai, and Jest
 
-## Databases
+For production, Heroku and Netlify were used.
 
-By default, the template is configured to connect to a MongoDB database using Mongoose.  It can be changed to connect to a PostgreSQL database using Knex by replacing any imports of `db-mongoose.js` with imports of `db-knex.js`, and uncommenting the Postgres `DATABASE_URL` lines in `config.js`.
+### Visual Representation of Technologies Used
+![Alt text](https://github.com/thinkful-ei18/Alisha_Brian_SpacedRep_Client/blob/master/FoodiePhonetics_TechnologiesUsed_041918.png?raw=true "Visual representation of technologies used to create Foodie Phonetics")
 
-## Deployment
+# The App
+The production-ready version of Foodie Phonetics can be found at: [foodiephonetics.netlify.com](foodiephonetics.netlify.com)
 
-Requires the [Heroku CLI client](https://devcenter.heroku.com/articles/heroku-command-line).
+### Login Page
 
-### Setting up the project on Heroku
+### Registration Page
 
-* Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
-* Create the Heroku app: `heroku create PROJECT_NAME`
 
-* If your backend connects to a database, you need to configure the database URL:
-    * For a MongoDB database: `heroku config:set DATABASE_URL=mongodb://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME`
-    * For a PostgreSQL database: `heroku config:set DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME`
+### Landing Page
 
-* If you are creating a full-stack app, you need to configure the client origin: `heroku config:set CLIENT_ORIGIN=https://www.YOUR_DEPLOYED_CLIENT.com`
+# The Code
 
-### Deploying to Heroku
+#### Mongoose User Schema
+![Alt text](https://github.com/thinkful-ei18/alisha_brian_spacedRep_server/blob/master/FoodiePhonetics_MongooseUserSchema_041918.png?raw=true "Mongoose User Schema")
 
-* Push your code to Heroku: `git push heroku master`
+#### User Routes
+![Alt text](https://github.com/thinkful-ei18/alisha_brian_spacedRep_server/blob/master/FoodiePhonetics_UserRoutes_041918.png?raw=true "User Routes")
+
+
+
