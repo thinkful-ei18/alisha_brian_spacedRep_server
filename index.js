@@ -34,7 +34,7 @@ passport.use(jwtStrategy);
 passport.use(localStrategy);
 
 
-/* ========== ENPOINTS ========== */
+/* ========== ENDPOINTS ========== */
 app.use('/api/user', userRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/register', registerRouter);
