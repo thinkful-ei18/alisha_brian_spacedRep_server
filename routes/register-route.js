@@ -3,7 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 const User = require('../models/User');
-const Questions = require('../models/questions');
+const Question = require('../models/Question');
+const LinkedList = require('../seedData/linkedList');
+const seedData = require('../seedData/questions');
 
 
 //POST
@@ -86,69 +88,150 @@ router.post('/', (req, res, next) => {
 
 
   /* ========== PREPARE QUESTIONS FOR USER SCHEMA ========== */
-  let questions = Questions;
 
-  questions.map((question, index) => {
-    if (index === 0) {
-      question.head = questions[index + 1];
-    }
-    else {
-      question.M = 1;
-      if(index !== questions.length-1) {
-        question.next = questions[index + 1];
+  // let questions;
+
+  const seedDocuments = (obj) => {
+    Question.create({ question: obj.question, answer: obj.answer})
+      .then(results => {
+        // console.log('result:', result);
+        if(seedData.length) {
+          seedDocuments(seedData.shift());
+        }
+        else {
+          return Question.find().exec()
+            .then(questions => createQLL(questions));
+        }
+        return true;
+      });
+  };
+
+  const createQLL = questionsfromDb => {
+    // console.log('Q_FROM_DB:', questionsfromDb);
+    let QLL = new LinkedList();
+    // console.log('QLL:', QLL);
+    questionsfromDb.map(obj => QLL.insertLast({ question: obj.question, answer: obj.answer, M:1 }));
+    // console.log('QLL:', QLL);
+    // return QLL;
+    return res.json(QLL);
+  };
+  
+  Question.find()
+    .then(result => {
+      // console.log('RESULT:', result);
+      if (result.length < 1) {
+        // console.log('inside');
+
+        seedDocuments(seedData.shift());
+
+        // return seedData.forEach(obj => {
+        //   return Question.create({ question: obj.question, answer: obj.answer})
+        //     .then(() => Question.find())
+        //     .then(db => {
+        //       console.log('DB:', db);
+        //       return db;              
+        //     });
+        // });
       }
       else {
-        question.next = null;
+        return createQLL(result);
       }
-    }
-  });
+    });
+  
+
+  // let questions = Questions;
+
+  // questions.map((question, index) => {
+  //   if (index === 0) {
+  //     question.head = questions[index + 1];
+  //   }
+  //   else {
+  //     question.M = 1;
+  //     if(index !== questions.length-1) {
+  //       question.next = questions[index + 1];
+  //     }
+  //     else {
+  //       question.next = null;
+  //     }
+  //   }
+  // });
 
   
   /* ========== CREATE USER ========== */
   let { fullname ='', email, username, password = '' } = req.body;
   email = email.trim();
-  questions = questions[0];
   const score = 0;
+  let questions;
+  console.log('questions:', questions);
 
-  User.find({ username })
-    .count()
-    .then(count => {
-      if (count) {
-        return Promise.reject({
-          code: 422,
-          reason: 'ValidationError',
-          message: 'Username already taken',
-          location: 'username'
-        });
-      }
-      return User.hashPassword(password);
-    })
-    .then(digest => {
+//   User.find({ username })
+//     .count()
+//     .then(count => {
+//       if (count) {
+//         return Promise.reject({
+//           code: 422,
+//           reason: 'ValidationError',
+//           message: 'Username already taken',
+//           location: 'username'
+//         });
+//       }
+//       return Question.find();
+//     })
+//     .then(result => {
+//       console.log('RESULT:', result);
+//       if (result.length < 1) {
+//         console.log('inside');
+//         let seedTheDb = seedData.map(obj => {
+//           Question.create({ question: obj.question, answer: obj.answer});
+//         });
+//         // let seedTheDb = Question.find();
+//         console.log('SEED:', seedTheDb);
+//         // return seedTheDb;
+//         Question.find()
+//           .then(answer => console.log('ANSWER:', answer));
+//       }
+//       else {
+//         return result;
+//       }
+//     })
+//     .then(questionsfromDb => {
+//       console.log('QUES:', questionsfromDb);
+//       let QLL = new LinkedList();
+//       // console.log('QLL:', QLL);
+//       questionsfromDb.map(obj => QLL.insertLast({ question: obj.question, answer: obj.answer, M:1 }));
+//       console.log('QLL:', QLL);
+//       questions = QLL;
+//       // res.json(QLL);
+//       // })
+//       // .then(() => {
+//       return User.hashPassword(password);
+//     })
+//     .then(digest => {
 
-      const newUser = {
-        fullname,
-        email,
-        username,
-        password: digest,
-        questions,
-        score
-      };
-      return User.create(newUser);
-    })
-    .then(result => {
+//       const newUser = {
+//         fullname,
+//         email,
+//         username,
+//         password: digest,
+//         questions,
+//         score
+//       };
+//       return User.create(newUser);
+//     })
+//     .then(result => {
 
-      return res
-        .status(201)
-        .location(`/auth/register/${result.id}`)
-        .json(result);
-    })
-    .catch(err => {
-      if (err.code === 11000) {
-        err = new Error('That username is taken');
-        err.status = 400;
-      }
-      next(err);
-    });
+//       return res
+//         .status(201)
+//         .location(`/auth/register/${result.id}`)
+//         .json(result);
+//     })
+//     .catch(err => {
+//       if (err.code === 11000) {
+//         err = new Error('That username is taken');
+//         err.status = 400;
+//       }
+//       next(err);
+//     });
 });
 
 module.exports = router;
