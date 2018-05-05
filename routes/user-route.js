@@ -31,8 +31,8 @@ router.get('/question', (req, res, next) => {
   User.findById(userId)
     .then( user => {
       let qAndA = {
-        question: user.questions[0].head.question,
-        answer: user.questions[0].head.answer,
+        question: user.questions[0].head.value.question,
+        answer: user.questions[0].head.value.answer,
         score: user.score
       };
       res.json(qAndA);
@@ -49,11 +49,11 @@ router.put('/validate', (req, res, next) => {
 
   User.findById(userId)
     .then(user => {
-      if (user.questions[0].head.answer === input) {
-        user.questions[0].head.M = user.questions[0].head.M * 2;
+      if (user.questions[0].head.value.answer === input) {
+        user.questions[0].head.value.M = user.questions[0].head.value.M * 2;
         score = user.score + 1;
       } else {
-        user.questions[0].head.M = 1;
+        user.questions[0].head.value.M = 1;
         score = user.score;
       }
 
@@ -65,8 +65,8 @@ router.put('/validate', (req, res, next) => {
         .then( user => {
 
           let qAndA = {
-            question: questions.head.question,
-            answer: questions.head.answer,
+            question: questions.head.value.question,
+            answer: questions.head.value.answer,
             score
           };
 
@@ -84,15 +84,15 @@ const insertAt = questions => {
   let currentNode = questions.head;
   let previousNode;
 
-  for (let i=0; i<questions.head.M+1; i++) {
+  for (let i=0; i<questions.head.value.M+1; i++) {
     previousNode = currentNode; 
     currentNode = currentNode.next; 
   }
 
   previousNode.next = {
-    question: reinsert.head.question,
-    answer: reinsert.head.answer,
-    M: reinsert.head.M,
+    question: reinsert.head.value.question,
+    answer: reinsert.head.value.answer,
+    M: reinsert.head.value.M,
     next: currentNode 
   };
   reinsert.head = reinsert.head.next;
@@ -105,7 +105,7 @@ const insertAt = questions => {
 router.post('/reset', (req, res, next) => {
 
   const userId = req.user.id;
-  console.log('entered');
+  
   User.findByIdAndUpdate(userId, {score: 0}, {upsert: false, new: true } )
     .then(user => {
       res.json(user);

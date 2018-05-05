@@ -3,12 +3,14 @@ const express = require('express');
 const router = express.Router();
 
 const User = require('../models/User');
-const Questions = require('../models/questions');
+const Question = require('../models/Question');
+const LinkedList = require('../seedData/linkedList');
+const seedData = require('../seedData/questions');
 
 
-//POST
 router.post('/', (req, res, next) => {
 
+  // VERIFY THAT ALL REQUIRED FIELDS ARE IN REQ.BODY
   const requiredFields = ['email', 'username', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -20,6 +22,7 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
+  // VERIFY THAT ALL FIELDS ARE A STRING
   const stringFields = ['fullname', 'email', 'username', 'password'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
@@ -31,8 +34,8 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  //TRIM SPACE BUT NOT ON PASSWORD
-  const noWhiteSpaces = ['username', 'password', 'email'];
+  // VERIFY THAT THE REQUIRED FIELDS DON'T HAVE A SPACE AT THE BEGINNING OR END
+  const noWhiteSpaces = ['email', 'username', 'password'];
   const withWhiteSpaces = noWhiteSpaces.find(
     field => req.body[field].trim() !== req.body[field]
   );
@@ -44,7 +47,7 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  //LENGTH REQUIREMENTS
+  // VERIFY THE UN/PW FIELDS MEET THE LENGTH REQUIREMENTS
   const sizedFields = {
     username: { min: 1 },
     password: { min: 8, max: 72 }
@@ -61,10 +64,7 @@ router.post('/', (req, res, next) => {
     const err = new Error(
       `Field: '${tooSmall}' must be at least ${min} characters long`
     );
-
-
     err.status = 422;
-
     return next(err);
   }
 
@@ -85,31 +85,41 @@ router.post('/', (req, res, next) => {
   }
 
 
-  /* ========== PREPARE QUESTIONS FOR USER SCHEMA ========== */
-  let questions = Questions;
+  /* ============================== 
+  PREPARE QUESTIONS FOR USER SCHEMA - created these two functions to prevent returning pending promises in the user creation process
+  ============================== */
 
-  questions.map((question, index) => {
-    if (index === 0) {
-      question.head = questions[index + 1];
-    }
-    else {
-      question.M = 1;
-      if(index !== questions.length-1) {
-        question.next = questions[index + 1];
-      }
-      else {
-        question.next = null;
-      }
-    }
-  });
+  // this function seeds the Question collection
+  const seedDocuments = obj => {
+    Question.create({ question: obj.question, answer: obj.answer})
+      .then(results => {
+        if(seedData.length) {
+          seedDocuments(seedData.shift());
+        }
+        else {
+          return Question.find().exec()
+            .then(questions => createQLL(questions));
+        }
+        return true;
+      });
+  };
+
+  // make a LL with the items from the Question collection
+  const createQLL = questionsfromDb => {
+    let QLL = new LinkedList();
+    questionsfromDb.map(obj => QLL.insertLast({ question: obj.question, answer: obj.answer, M:1 }));
+    return QLL;
+  };
 
   
-  /* ========== CREATE USER ========== */
+
+  /* ============================== 
+  CREATE USER 
+  ============================== */
   let { fullname ='', email, username, password = '' } = req.body;
   email = email.trim();
-  questions = questions[0];
   const score = 0;
-
+  
   User.find({ username })
     .count()
     .then(count => {
@@ -121,16 +131,30 @@ router.post('/', (req, res, next) => {
           location: 'username'
         });
       }
-      return User.hashPassword(password);
+      return Question.find();
     })
-    .then(digest => {
-
+    // HANDLE SEEDING/READING THE QUESTION COLLECTION
+    .then(result => {
+      if (result.length < 1) {
+        seedDocuments(seedData.shift());
+      }
+      else {
+        return createQLL(result);
+      }
+    })
+    .then(linkedList => {
+      // HASH THE PW
+      return User.hashPassword(password)
+        .then(digest => ({linkedList, digest}));
+    })
+    // PASS ON THE LINKED LIST AND HASHED PW
+    .then( results => {
       const newUser = {
         fullname,
         email,
         username,
-        password: digest,
-        questions,
+        password: results.digest,
+        questions: results.linkedList,
         score
       };
       return User.create(newUser);
