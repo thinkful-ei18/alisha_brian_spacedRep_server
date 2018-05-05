@@ -12,7 +12,6 @@ const { JWT_SECRET, JWT_EXPIRY } = require('../config');
 const jwtAuth = passport.authenticate('jwt', options);
 
 function createAuthToken(user) {
-  console.log("user",user)
   return jwt.sign({ user }, JWT_SECRET, {
     subject: user.username,
     expiresIn: JWT_EXPIRY
