@@ -90,9 +90,11 @@ const insertAt = questions => {
   }
 
   previousNode.next = {
-    question: reinsert.head.value.question,
-    answer: reinsert.head.value.answer,
-    M: reinsert.head.value.M,
+    value: {
+      question: reinsert.head.value.question,
+      answer: reinsert.head.value.answer,
+      M: reinsert.head.value.M
+    },
     next: currentNode 
   };
   reinsert.head = reinsert.head.next;
